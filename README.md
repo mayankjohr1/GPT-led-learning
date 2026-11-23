@@ -6,7 +6,7 @@ My personal AI-guided learning journey to strengthen software engineering fundam
 
 I'm a software/data engineer with 9+ years of experience, rebuilding my fundamentals to become a stronger backend and data platform engineer.
 
-**Career Target:** Senior Engineering Roles | ₹45 LPA+
+**Career Target:** Senior/Lead Engineering Roles 
 
 ## 🗺️ Roadmap
 
