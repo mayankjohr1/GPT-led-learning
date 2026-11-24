@@ -298,3 +298,186 @@ Before predicting Python code, ask:
 **Next topic:** Tuples and Immutability (not started)
 
 **Instruction to future mentor:** Continue with tuples. Revisit the recorded misconceptions occasionally through short retrieval exercises, not a full restart. Let Mayank attempt code before revealing solutions.
+
+---
+
+# Day 2 Addendum: Tuples, Sets, Dictionaries and Comprehensions
+
+**Date:** 24 November 2026  
+**Status:** Tuples and Sets completed; dictionary fundamentals covered; dictionary comprehension filtering exercise pending.
+
+## 14. Tuple containing mutable lists
+
+```python
+a = ([1, 2], [3, 4])
+b = a
+c = a[0]
+c.append(5)
+print(a)
+a[0].append(6)
+print(b)
+a = ([10, 20], [30, 40])
+print(b)
+print(a)
+```
+
+**My predictions (all correct):**
+```text
+([1, 2, 5], [3, 4])
+([1, 2, 5, 6], [3, 4])
+([1, 2, 5, 6], [3, 4])
+([10, 20], [30, 40])
+```
+
+**Why:** Tuple slots cannot be reassigned, but the lists stored in those slots can be mutated. `b` remains bound to the old tuple after `a` is rebound. Thus `a is b` is `False` at the end.
+
+**Bonus:**
+```python
+a = ([1, 2], [3, 4])
+a[0] += [5]
+```
+
+**My answer:** It updates the list. **Partially correct:** It mutates the list to `[1, 2, 5]` **and then raises `TypeError`** because augmented assignment attempts to store the result back into the immutable tuple slot. A failed statement can leave partial state changes.
+
+**Final check (correct):** `a[0].append(30)` succeeds, whereas `a[0] = [10,20,30]` raises `TypeError`. My explanation was that the first mutates the nested list and the second attempts assignment. **Refinement:** Assignment does not necessarily create a new object; it attempts to rebind a slot or name.
+
+## 15. Set deduplication must preserve order when required
+
+**Original attempt:**
+```python
+property_set = set(property_ids)
+return list(property_set)
+```
+
+**What was right:** Removes duplicates. **What was wrong:** Set iteration order is not guaranteed, so the original first-appearance order is not reliably preserved.
+
+**My corrected solution (independently written):**
+```python
+def get_unique_properties(property_ids):
+    unique_ids = []
+    seen = set()
+    for property_id in property_ids:
+        if property_id not in seen:
+            seen.add(property_id)
+            unique_ids.append(property_id)
+    return unique_ids
+
+property_ids = [101, 102, 103, 101, 104, 102, 105]
+print(get_unique_properties(property_ids))
+# [101, 102, 103, 104, 105]
+```
+
+**My complexity explanation (correct):** Set membership is O(1) on average, so the loop is expected O(n), not O(n²). Both `seen` and `unique_ids` hold up to `k` unique IDs, giving O(k) auxiliary space, worst case O(n). For one million input IDs and 100 unique IDs, `k = 100`.
+
+**Edge case:** Elements must be hashable. A list of lists causes `TypeError` when checking membership in a set.
+
+## 16. Dictionary equality and hashability
+
+```python
+data = {}
+key1 = (101, 2026)
+key2 = (101, 2026)
+data[key1] = "Property A"
+data[key2] = "Property B"
+```
+
+**My answers:** `len(data) == 1`, and `data[key1] == 'Property B'`, because equivalent keys update the value. **Correct.** A tuple containing a list cannot be a dictionary key because the nested list is unhashable. **Correct.**
+
+**Important nuance:** `key1 == key2` is `True`; `key1 is key2` should not be relied on in this literal example because constant reuse is implementation-dependent. Dictionaries use hash and equality, not identity alone.
+
+## 17. Numeric and Boolean keys can be equivalent
+
+```python
+data = {}
+data[1] = "Integer"
+data[True] = "Boolean"
+data[1.0] = "Float"
+```
+
+**My prediction:** Two keys, maybe an error because I wasn't sure if `bool` was hashable. **Incorrect.**
+
+**Correct:** `data == {1: 'Float'}`, `len(data) == 1`, and `data[True] == 'Float'`.
+
+**Why:** `True == 1 == 1.0` and all three have equal hashes. Boolean values are hashable. Updating an equivalent key changes the value while retaining the original stored key.
+
+**Follow-up (correct independently):**
+```python
+data = {}
+data[0] = "Zero"
+data[False] = "False Value"
+data["0"] = "String Zero"
+# {0: 'False Value', '0': 'String Zero'}
+# len(data) == 2
+# data[False] == 'False Value'
+```
+
+**My reasoning:** Quoted `"0"` is a string and is not equal to integer `0` or boolean `False`. **Correct.** Distinct types can still compare equal, so type alone does not determine key uniqueness.
+
+## 18. Dictionary indexing versus `.get()`
+
+**My answers:** `properties[103]` raises `KeyError`; `properties.get(103)` returns `None`. **Correct.**
+
+**My original design preference:** Always use `.get()` with a default to avoid errors. **Refinement:** This is a requirements-driven choice, not a universal rule. Use a default when missing data is expected and a fallback is valid; fail or validate explicitly when a missing required key indicates bad data. I chose not to spend more time on this judgment discussion.
+
+## 19. Dictionary comprehension syntax: current learning gap
+
+**Task:** Map each property ID to `"High"` if occupancy >= 90, otherwise `"Low"`.
+
+**My attempted expression (formatting normalized):**
+```python
+dicty = {
+    p[id]: x for p in properties x = "High" if p[occupancy] >= 90 else "low"
+}
+```
+
+**My idea was right:** Iterate properties, use ID as key, classify occupancy. **Syntax was incorrect:**
+- Dictionary string keys require `p["id"]` and `p["occupancy"]`.
+- The value expression belongs before `for`, not an `x = ...` assignment after it.
+- Required spelling was `"Low"`, not `"low"`.
+
+**Correct solution shown during review:**
+```python
+dicty = {
+    p["id"]: "High" if p["occupancy"] >= 90 else "Low"
+    for p in properties
+}
+```
+
+**Critical distinction:**
+- **Transform all records with conditional values:** `{key: A if condition else B for item in items}`.
+- **Filter out records:** `{key: value for item in items if condition}`.
+
+**Pending challenge, NOT solved yet:**
+```python
+properties = [
+    {"id": 101, "occupancy": 95},
+    {"id": 102, "occupancy": 82},
+    {"id": 103, "occupancy": 91},
+    {"id": 104, "occupancy": 76},
+]
+```
+
+Write a dictionary comprehension producing `{101: 95, 103: 91}` and explain time complexity and auxiliary space complexity. **Do not reveal the solution before my attempt in the next session.**
+
+## Day 2 lessons to revisit
+
+1. A tuple can hold mutable lists. Mutating the list is different from replacing the tuple slot.
+2. `a[0] += [...]` on a tuple-held list can mutate and then fail.
+3. `list(set(values))` deduplicates but does not guarantee original order.
+4. For order-preserving deduplication, use a `seen` set plus an output list.
+5. Dictionary key equivalence is based on hashing and equality, not simply type or identity.
+6. `True`, `1`, and `1.0` are equivalent dictionary keys; `"0"` and `0` are not.
+7. Comprehension value expressions and filter conditions have different positions.
+8. Check exact syntax, string capitalization, and quoted dictionary keys.
+
+## Day 2 master handover
+
+**Date:** 24 November 2026  
+**Phase:** 1, Python Fundamentals  
+**Topic:** Dictionary Comprehensions (in progress)  
+**Concepts covered:** Tuples, nested mutability, sets, ordered deduplication, dictionary hashability and key equality, dictionary comprehension syntax  
+**Problem assigned:** Filter properties with occupancy >= 90 into an ID-to-occupancy dictionary  
+**Problem status:** Not started (follow-up); classification comprehension attempted and corrected during review  
+**My understanding:** Good on tuples, sets, and dictionary fundamentals; needs syntax practice on comprehensions  
+**Next topic:** Finish dictionary comprehensions, then Functions, Arguments and Scope  
+**Mentor instruction:** Continue the pending exercise, review my own code before showing a solution, and occasionally revisit these documented mistakes.
