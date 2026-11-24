@@ -1,87 +1,173 @@
-# Technical Learning Progress
+# Technical Learning Progress Handover
 
-Learner: Mayank Johri
-Last Updated: 23 November 2026
-
-## Current Position
-
+## Session Information
+Date: 24 November 2026
+Day: 2
 Phase: 1 - Python Fundamentals
+Overall Understanding: Good
+Next Session: Day 3
 
-Completed Topics:
-1. Variables, References and Mutability
-2. Python Lists
+## ✅ Completed Topics
 
-Current Topic:
-Tuples and Immutability (Not Started)
+### 1. Tuples and Immutability
+Status: Completed
+Understanding: Good
 
-## Understanding Assessment
-
-### Variables and Mutability
-Status: Good
-
-Understands:
+Concepts:
+- Tuple immutability
+- Mutable objects inside tuples
 - Object references
 - Mutation vs reassignment
-- Shallow copying
-- Function arguments
-- Object identity
-- += vs + for lists
+- Augmented assignment (`+=`) behavior
 
-Needs occasional revision:
-- Tracking object references across functions
+Performance:
+- Correctly predicted nested list mutations.
+- Understood why tuple elements cannot be reassigned.
+- Learned that `+=` on a nested list can mutate
+  the list before raising TypeError.
 
-### Python Lists
-Status: Good
+### 2. Sets and Hash-Based Lookups
+Status: Completed
+Understanding: Good
 
-Understands:
-- Dynamic arrays
-- append, insert, remove, pop
-- Time complexity of list operations
-- Mutation during iteration
-- Slice assignment
-- Auxiliary space complexity
+Concepts:
+- Set uniqueness
+- Hash-based membership
+- Order-preserving deduplication
+- Time and space complexity
 
-Common mistakes identified:
-- Confused pop(index) with remove(value)
-- Initially assumed removing elements
-  during iteration would remove everything
+Problem:
+Implement get_unique_properties().
 
-## Learning Preferences
+Status: Solved independently after feedback.
 
-- One concept per session
-- Practical Python examples
-- Predict output before execution
-- One coding challenge per topic
-- Do not reveal solutions immediately
-- Review code like a senior engineer
-- Challenge incorrect assumptions
-- Avoid excessive theory
-- Connect concepts to production engineering
-- Prioritize understanding over syllabus speed
+Correct implementation:
 
-## Next Session
+    def get_unique_properties(property_ids):
+        unique_ids = []
+        seen = set()
 
-Phase 1
-Topic 3: Tuples and Immutability
+        for property_id in property_ids:
+            if property_id not in seen:
+                seen.add(property_id)
+                unique_ids.append(property_id)
 
-Start with:
-- What tuples are
-- Why tuples are immutable
-- Tuple vs list
-- Mutable objects inside tuples
+        return unique_ids
 
-Provide one coding exercise.
+Complexity:
+- Time: O(n) average
+- Auxiliary Space: O(k)
+- k = number of unique elements
 
-Do not restart completed topics.
+### 3. Dictionaries
+Status: Completed (Core Concepts)
+Understanding: Good
 
-## Progress Tracking
+Concepts:
+- Hashable keys
+- Dictionary key equality
+- Boolean, integer and float key behavior
+- Dictionary lookup using [] and .get()
+- Missing-key handling
 
-Date: 23 November 2026
-Phase: 1
-Topic: Python Lists
-Concepts covered: Dynamic arrays, mutation,
-iteration, slice assignment, complexity
-Problem assigned: Remove even numbers safely
-Problem status: Solved
-My understanding: Good
-Next topic: Tuples and Immutability
+Important Learning:
+- 1, True and 1.0 are equivalent dictionary keys.
+- Dictionary keys use hashing and equality.
+- .get() vs [] depends on business requirements.
+- Missing-key handling is a design decision.
+
+## 🟡 Current Topic
+
+### 4. Dictionary Comprehensions
+Status: In Progress
+Understanding: Needs Syntax Practice
+
+Concepts Covered:
+- Dictionary comprehension structure
+- Conditional expressions
+- Filtering vs transforming values
+
+Initial Attempt:
+Attempted to assign a variable inside a comprehension.
+
+Mistakes:
+- Incorrect comprehension syntax.
+- Missing quotes around dictionary keys.
+- Confusion about placement of conditional expressions.
+
+Correct Pattern:
+
+    result = {
+        p["id"]: "High" if p["occupancy"] >= 90 else "Low"
+        for p in properties
+    }
+
+## Pending Exercise
+
+Given:
+
+    properties = [
+        {"id": 101, "occupancy": 95},
+        {"id": 102, "occupancy": 82},
+        {"id": 103, "occupancy": 91},
+        {"id": 104, "occupancy": 76}
+    ]
+
+Create a dictionary containing only properties
+with occupancy >= 90.
+
+Expected:
+
+    {101: 95, 103: 91}
+
+Requirements:
+- Use dictionary comprehension.
+- Explain time complexity.
+- Explain auxiliary space complexity.
+
+Problem Status: Not Started
+
+## Knowledge Gaps to Revisit
+
+1. Dictionary comprehension syntax.
+2. Conditional expressions vs filtering.
+3. Reading Python expressions carefully.
+4. Object identity and mutation (occasional revision).
+
+## Mentor Assessment
+
+Strengths:
+- Good conceptual reasoning.
+- Understands hash-based lookup performance.
+- Can explain O(n) time and O(k) space.
+- Relates data structures to production systems.
+- Responds well to code review feedback.
+
+Areas for Improvement:
+- Python syntax accuracy.
+- Translating correct logic into working code.
+- Checking all requirements before implementation.
+
+## Next Session Instructions
+
+1. Resume dictionary comprehensions.
+2. Complete the pending filtering exercise.
+3. Review the solution and complexity.
+4. If understanding is demonstrated, mark completed.
+5. Move to Functions, Arguments and Scope.
+6. Teach one concept at a time.
+7. Give one unsolved coding challenge.
+8. Do not restart completed topics.
+
+## Master Tracking Record
+
+Date: 24 November 2026
+Phase: 1 - Python Fundamentals
+Topic: Dictionary Comprehensions
+Concepts covered: Tuples, Sets, Dictionaries,
+Hashability, Dictionary Comprehensions
+Problem assigned: Filter properties using comprehension
+Problem status: Attempted (follow-up pending)
+My understanding: Good overall; syntax needs revision
+Next topic: Complete Dictionary Comprehensions,
+then Functions, Arguments and Scope
