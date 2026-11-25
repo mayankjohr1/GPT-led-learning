@@ -1,173 +1,99 @@
 # Technical Learning Progress Handover
 
-## Session Information
-Date: 24 November 2026
-Day: 2
-Phase: 1 - Python Fundamentals
-Overall Understanding: Good
-Next Session: Day 3
+**Learner:** Mayank Johri  
+**Last session:** 25 November 2026 (Day 3)  
+**Phase:** 1 - Python Fundamentals  
+**Weekly target:** 6-7 hours, usually weekdays around 4:00-5:30 PM IST  
+**Career direction:** Senior backend/data platform engineering; ₹45 LPA+ long-term target
 
-## ✅ Completed Topics
+## Current position
 
-### 1. Tuples and Immutability
-Status: Completed
-Understanding: Good
+**Current topic:** Functions: `*args` and `**kwargs`  
+**Status:** Introduced, exercise **not started**. Session stopped at user's request.  
+**Next action:** Ask Mayank to implement `calculate_metrics()` and answer the two conceptual questions below. Do not reveal the implementation first.
 
-Concepts:
-- Tuple immutability
-- Mutable objects inside tuples
-- Object references
-- Mutation vs reassignment
-- Augmented assignment (`+=`) behavior
+## Completed
 
-Performance:
-- Correctly predicted nested list mutations.
-- Understood why tuple elements cannot be reassigned.
-- Learned that `+=` on a nested list can mutate
-  the list before raising TypeError.
+| Topic | Assessment | Notes |
+|---|---|---|
+| Variables, references and mutability | Good | Early confusion about side effects, aliasing and `.copy()` resolved through practice |
+| Lists and iteration | Good | `pop` vs `remove`, iteration mutation, slice assignment, complexity |
+| Tuples and nested mutability | Good | Correctly reasoned about nested lists; learned tuple `+=` partial mutation/exception |
+| Sets and ordered deduplication | Good | Independently implemented set + list; O(n) expected time, O(k) space |
+| Dictionary hashability and lookup basics | Good | Learned cross-type numeric key equality; missing-key policy is context-dependent |
+| Dictionary comprehensions | Good, syntax to revisit | Final valid/invalid syntax exercise solved; initially omitted zero in `range(5)` |
+| Mutable default function arguments | Good | Follow-up with `None` defaults and shared list solved correctly |
 
-### 2. Sets and Hash-Based Lookups
-Status: Completed
-Understanding: Good
+## Partially covered / deferred
 
-Concepts:
-- Set uniqueness
-- Hash-based membership
-- Order-preserving deduplication
-- Time and space complexity
+- **Local/global scope:** Basic local vs global example solved correctly. `UnboundLocalError` from a read before local assignment explained, including unreachable assignment. More scope and mutation exercises deferred at Mayank's request; LEGB and closures **not completed**.
+- **Function arguments:** `*args` and `**kwargs` introduced but no challenge attempt yet.
 
-Problem:
-Implement get_unique_properties().
+## Pending challenge (resume here)
 
-Status: Solved independently after feedback.
-
-Correct implementation:
-
-    def get_unique_properties(property_ids):
-        unique_ids = []
-        seen = set()
-
-        for property_id in property_ids:
-            if property_id not in seen:
-                seen.add(property_id)
-                unique_ids.append(property_id)
-
-        return unique_ids
-
-Complexity:
-- Time: O(n) average
-- Auxiliary Space: O(k)
-- k = number of unique elements
-
-### 3. Dictionaries
-Status: Completed (Core Concepts)
-Understanding: Good
-
-Concepts:
-- Hashable keys
-- Dictionary key equality
-- Boolean, integer and float key behavior
-- Dictionary lookup using [] and .get()
-- Missing-key handling
-
-Important Learning:
-- 1, True and 1.0 are equivalent dictionary keys.
-- Dictionary keys use hashing and equality.
-- .get() vs [] depends on business requirements.
-- Missing-key handling is a design decision.
-
-## 🟡 Current Topic
-
-### 4. Dictionary Comprehensions
-Status: In Progress
-Understanding: Needs Syntax Practice
-
-Concepts Covered:
-- Dictionary comprehension structure
-- Conditional expressions
-- Filtering vs transforming values
-
-Initial Attempt:
-Attempted to assign a variable inside a comprehension.
-
-Mistakes:
-- Incorrect comprehension syntax.
-- Missing quotes around dictionary keys.
-- Confusion about placement of conditional expressions.
-
-Correct Pattern:
-
-    result = {
-        p["id"]: "High" if p["occupancy"] >= 90 else "Low"
-        for p in properties
-    }
-
-## Pending Exercise
-
-Given:
-
-    properties = [
-        {"id": 101, "occupancy": 95},
-        {"id": 102, "occupancy": 82},
-        {"id": 103, "occupancy": 91},
-        {"id": 104, "occupancy": 76}
-    ]
-
-Create a dictionary containing only properties
-with occupancy >= 90.
-
-Expected:
-
-    {101: 95, 103: 91}
+```python
+def calculate_metrics(property_id, *args, **kwargs):
+    # Implement this yourself
+    pass
+```
 
 Requirements:
-- Use dictionary comprehension.
-- Explain time complexity.
-- Explain auxiliary space complexity.
+1. `property_id` is mandatory.
+2. `*args` contains numeric values; calculate their sum.
+3. `**kwargs` contains additional property attributes.
+4. Return a dictionary with keys `property_id`, `total`, and `attributes`.
 
-Problem Status: Not Started
+Example call:
+```python
+calculate_metrics(101, 100, 200, 300, occupancy=95, region="Delhi")
+```
 
-## Knowledge Gaps to Revisit
+Expected result:
+```python
+{
+    "property_id": 101,
+    "total": 600,
+    "attributes": {"occupancy": 95, "region": "Delhi"}
+}
+```
 
-1. Dictionary comprehension syntax.
-2. Conditional expressions vs filtering.
-3. Reading Python expressions carefully.
-4. Object identity and mutation (occasional revision).
+Questions:
+1. What happens when calling `calculate_metrics(101)`?
+2. What differs between `calculate_metrics(101, 100, 200)` and `calculate_metrics(101, occupancy=100, units=200)`?
 
-## Mentor Assessment
+**Problem status:** Not started. **Understanding:** Not yet assessed.
 
-Strengths:
-- Good conceptual reasoning.
-- Understands hash-based lookup performance.
-- Can explain O(n) time and O(k) space.
-- Relates data structures to production systems.
-- Responds well to code review feedback.
+## Significant mistakes worth revisiting
 
-Areas for Improvement:
-- Python syntax accuracy.
-- Translating correct logic into working code.
-- Checking all requirements before implementation.
+- Assumed no return means no mutation can persist; corrected.
+- Missed `.copy()` in code; read operations carefully.
+- Used `pop(value)` instead of `remove(value)`.
+- Assumed list deletion during iteration removes every element.
+- Initially used `list(set(...))` despite ordering requirement.
+- Didn't know `True`, `1`, and `1.0` are equivalent dictionary keys.
+- Mixed conditional value expressions with comprehension filters.
+- Initially thought explicit `[]` replaces a function's stored mutable default.
+- Initially believed globals aren't visible in functions; learned local assignment classification.
 
-## Next Session Instructions
+Detailed attempts, corrected examples, and explanations: **`learning_notes.md`**.
 
-1. Resume dictionary comprehensions.
-2. Complete the pending filtering exercise.
-3. Review the solution and complexity.
-4. If understanding is demonstrated, mark completed.
-5. Move to Functions, Arguments and Scope.
-6. Teach one concept at a time.
-7. Give one unsolved coding challenge.
-8. Do not restart completed topics.
+## Instructions for the next AI mentor
 
-## Master Tracking Record
+1. Continue directly with the pending `*args`/`**kwargs` challenge.
+2. Let Mayank attempt code before showing the solution.
+3. Review correctness, edge cases, readability and complexity as appropriate.
+4. Teach one concept at a time, not a long lecture.
+5. Do not reopen settled judgment calls or repeat basic scope exercises unless they become relevant to closures/decorators.
+6. Occasionally use brief revision exercises from `learning_notes.md`.
+7. At the end, update both notes and this handover. Do not mark unfinished work complete.
 
-Date: 24 November 2026
-Phase: 1 - Python Fundamentals
-Topic: Dictionary Comprehensions
-Concepts covered: Tuples, Sets, Dictionaries,
-Hashability, Dictionary Comprehensions
-Problem assigned: Filter properties using comprehension
-Problem status: Attempted (follow-up pending)
-My understanding: Good overall; syntax needs revision
-Next topic: Complete Dictionary Comprehensions,
-then Functions, Arguments and Scope
+## Master tracking record
+
+**Date:** 25 November 2026  
+**Phase:** 1 - Python Fundamentals  
+**Topic:** Functions: `*args` and `**kwargs`  
+**Concepts covered:** Mutable default arguments and their persistence; `None` default pattern; basic local/global scope; introduction to `*args` and `**kwargs`  
+**Problem assigned:** `calculate_metrics()` implementation and conceptual questions  
+**Problem status:** Not started  
+**My understanding:** Good on mutable defaults; basic scope understood; `*args`/`**kwargs` not assessed  
+**Next topic:** Finish `*args`/`**kwargs`, then closures/decorators when ready
